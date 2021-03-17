@@ -1,11 +1,9 @@
 import math
-import random
 
 import utils
 
 
-def Regret(distanceMatrix):
-    startingVertex = random.randint(0, len(distanceMatrix) - 1)
+def Regret(distanceMatrix, startingVertex):
     path = [startingVertex]
     for i in range(math.ceil(len(distanceMatrix) / 2)):
         vertexesCosts = []
@@ -30,8 +28,4 @@ if __name__ == '__main__':
     kroA100Data = utils.readTspFile("data/kroA100.tsp")
     kroB100Data = utils.readTspFile("data/kroB100.tsp")
 
-    kroA100 = Regret(utils.makeDistanceMatrix(kroA100Data))
-    kroB100 = Regret(utils.makeDistanceMatrix(kroB100Data))
-
-    utils.drawGraph(kroA100Data, kroA100)
-    utils.drawGraph(kroB100Data, kroB100)
+    utils.tester(Regret, kroA100Data)

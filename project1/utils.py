@@ -1,3 +1,5 @@
+import random
+
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -45,3 +47,34 @@ def drawGraph(data, path):
 
     plt.show()
     plt.clf()
+
+
+def calculatePathDistance(path, distanceMatrix):
+    pathDistance = 0
+    for vertex in range(len(path) - 1):
+        pathDistance += distanceMatrix[path[vertex]][path[vertex + 1]]
+    return pathDistance
+
+
+def tester(function, data):
+    startingVertexes = random.sample(range(100), 50)
+    distanceMatrix = makeDistanceMatrix(data)
+
+    paths = []
+    for vertex in startingVertexes:
+        paths.append(function(distanceMatrix, vertex))
+    distances = []
+    for path in paths:
+        distances.append(calculatePathDistance(path, distanceMatrix))
+
+    minDistance = min(distances)
+    minPath = paths[distances.index(minDistance)]
+    maxDistance = max(distances)
+    maxPath = paths[distances.index(maxDistance)]
+    averageDistance = sum(distances) / len(distances)
+
+    print("minimalny dystans: " + str(minDistance), "maksymalny dystans: " + str(maxDistance),
+          "średni dystans: " + str(averageDistance))
+
+    drawGraph(data, minPath)
+    drawGraph(data, maxPath)

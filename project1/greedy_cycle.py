@@ -1,12 +1,10 @@
 import math
-import random
 
 import numpy as np
 import utils
 
 
-def GreedyCycle(distanceMatrix):
-    startingVertex = random.randint(0, len(distanceMatrix) - 1)
+def GreedyCycle(distanceMatrix, startingVertex):
     path = [startingVertex]
     for i in range(math.ceil(len(distanceMatrix) / 2)):
         minCost = np.uint64(-1)
@@ -33,8 +31,4 @@ if __name__ == '__main__':
     kroA100Data = utils.readTspFile("data/kroA100.tsp")
     kroB100Data = utils.readTspFile("data/kroB100.tsp")
 
-    kroA100 = GreedyCycle(utils.makeDistanceMatrix(kroA100Data))
-    kroB100 = GreedyCycle(utils.makeDistanceMatrix(kroB100Data))
-
-    utils.drawGraph(kroA100Data, kroA100)
-    utils.drawGraph(kroB100Data, kroB100)
+    utils.tester(GreedyCycle, kroA100Data)
