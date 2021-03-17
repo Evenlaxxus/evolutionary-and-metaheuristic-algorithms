@@ -41,9 +41,7 @@ def drawGraph(data, path):
     for i in range(len(path) - 1):
         graph.add_edge(path[i], path[i + 1])
 
-    nx.draw_networkx_nodes(graph, dataDict)
-    nx.draw_networkx_labels(graph, dataDict)
-    nx.draw_networkx_edges(graph, dataDict)
+    nx.draw_networkx(graph, pos=dataDict, font_size=6, node_size=50)
 
     plt.show()
     plt.clf()
