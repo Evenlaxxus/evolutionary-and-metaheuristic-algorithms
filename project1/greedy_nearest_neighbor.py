@@ -1,8 +1,7 @@
 import random
-import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.spatial import distance_matrix
-from project1 import utils
+import utils
 
 
 def greedy_nearest_neighbor():
