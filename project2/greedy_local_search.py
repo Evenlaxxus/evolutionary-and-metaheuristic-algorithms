@@ -36,15 +36,10 @@ def greedyLocalSearch(distances, type):
             else:
                 exchangeWithNoImprovement += 1
             np.random.shuffle(exchange_actions)
-    return path
+    return np.append(path, path[0])
 
 
 if __name__ == '__main__':
-    instance = load(f'../data/kroA100.tsp')
     kroA100Data = utils.readTspFile("../data/kroA100.tsp")
-    distances = np.array(utils.makeDistanceMatrix(instance))
-    print(distances)
-    result_path = list(greedyLocalSearch(distances, "edges"))
-    result_path.append(result_path[0])
-    print(result_path)
-    utils.drawGraph(kroA100Data, result_path)
+    utils.localSearchTester(greedyLocalSearch, kroA100Data, "edges")
+    utils.localSearchTester(greedyLocalSearch, kroA100Data, "vertices")

@@ -116,9 +116,9 @@ def calculate_swap_delta(swap_action, path, distances, type):
     if type == "vertices":
         p1, p2 = swap_action
         before = distances[path[p1], path[p1 - 1]] + distances[path[p2], path[p2 - 1]] + \
-              distances[path[p1], path[(p1 + 1) % len(path)]] + distances[path[p2], path[(p2 + 1) % len(path)]]
+                 distances[path[p1], path[(p1 + 1) % len(path)]] + distances[path[p2], path[(p2 + 1) % len(path)]]
         after = distances[path[p2], path[p1 - 1]] + distances[path[p1], path[p2 - 1]] + \
-              distances[path[p2], path[(p1 + 1) % len(path)]] + distances[path[p1], path[(p2 + 1) % len(path)]]
+                distances[path[p2], path[(p1 + 1) % len(path)]] + distances[path[p1], path[(p2 + 1) % len(path)]]
         if abs(p1 - p2) == 1 or abs(p1 - p2) == len(path) - 1:
             after += (distances[path[p1], path[p2]]) * 2
         return before - after
@@ -134,7 +134,8 @@ def calculate_swap_delta(swap_action, path, distances, type):
 def calculate_exchange_delta(exchange_action, path, not_path, distances):
     in_path, out_of_path = exchange_action
     before = distances[path[in_path], path[in_path - 1]] + distances[path[in_path], path[(in_path + 1) % len(path)]]
-    after = distances[not_path[out_of_path], path[in_path - 1]] + distances[not_path[out_of_path], path[(in_path + 1) % len(path)]]
+    after = distances[not_path[out_of_path], path[in_path - 1]] + distances[
+        not_path[out_of_path], path[(in_path + 1) % len(path)]]
     return before - after
 
 
@@ -169,4 +170,3 @@ def localSearchTester(function, data, mode):
           "średni czas: " + str(averageTime))
 
     drawGraph(data, minPath)
-    drawGraph(data, maxPath)

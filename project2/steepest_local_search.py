@@ -4,7 +4,7 @@ import utils
 
 
 def load(filename):
-    return np.genfromtxt(filename, skip_header=6, skip_footer=1, dtype='int64')[:,1:]
+    return np.genfromtxt(filename, skip_header=6, skip_footer=1, dtype='int64')[:, 1:]
 
 
 def steepest(distances, type):
@@ -17,7 +17,8 @@ def steepest(distances, type):
 
     while True:
         swap_delta = [utils.calculate_swap_delta(one_swap, path, distances, type) for one_swap in actions]
-        exchange_delta = [utils.calculate_exchange_delta(one_exchange, path, not_path, distances) for one_exchange in exchange_actions]
+        exchange_delta = [utils.calculate_exchange_delta(one_exchange, path, not_path, distances) for one_exchange in
+                          exchange_actions]
         id_max_swap = int(np.argmax(swap_delta))
         id_exchange_max = int(np.argmax(exchange_delta))
         max_swap = swap_delta[id_max_swap]
@@ -28,20 +29,14 @@ def steepest(distances, type):
             utils.swap(path, actions[id_max_swap], type)
         else:
             utils.exchange_vertices(path, not_path, exchange_actions[id_exchange_max])
-    return path
+    return np.append(path, path[0])
 
 
 def main():
-    instance = load(f'../data/kroA100.tsp')
     kroA100Data = utils.readTspFile("../data/kroA100.tsp")
-    # distances = np.array(utils.makeDistanceMatrix(instance))
-    # print(distances)
-    # result_path = list(steepest(distances, "edges"))
-    # result_path.append(result_path[0])
-    # print(result_path)
-    # utils.drawGraph(kroA100Data, result_path)
+    utils.localSearchTester(steepest, kroA100Data, "edges")
     utils.localSearchTester(steepest, kroA100Data, "vertices")
 
 
-if __name__== "__main__":
+if __name__ == "__main__":
     main()
