@@ -28,7 +28,7 @@ def GreedyCycle(distanceMatrix, startingVertex):
 
 
 if __name__ == '__main__':
-    kroA100Data = utils.readTspFile("data/kroA100.tsp")
-    kroB100Data = utils.readTspFile("data/kroB100.tsp")
+    kroA100Data = utils.readTspFile("../data/kroA100.tsp")
+    kroB100Data = utils.readTspFile("../data/kroB100.tsp")
 
     utils.tester(GreedyCycle, kroA100Data)

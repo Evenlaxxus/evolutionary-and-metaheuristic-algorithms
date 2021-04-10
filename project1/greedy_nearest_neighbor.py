@@ -9,7 +9,7 @@ def greedy_nearest_neighbor():
     coordinates = []
     cities = []
     lines_name_x_y = {}
-    file = open("data/kroA100.tsp", "r")
+    file = open("../data/kroA100.tsp", "r")
     content = file.readlines()
     for line in content[6:106]:
         numbers = line.split()
@@ -47,7 +47,7 @@ def greedy_nearest_neighbor():
 
 
 if __name__ == "__main__":
-    kroA100Data = utils.readTspFile("data/kroA100.tsp")
+    kroA100Data = utils.readTspFile("../data/kroA100.tsp")
     kroA100 = greedy_nearest_neighbor()
     kroA100 = [int(i)-1 for i in kroA100]
     print(kroA100)
