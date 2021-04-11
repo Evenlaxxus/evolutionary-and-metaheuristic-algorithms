@@ -17,25 +17,28 @@ def greedyLocalSearch(distances, type):
     exchange_actions = np.array(list(result_of_itertools_product), 'int')
     swapLen, exchangeLen = len(actions), len(exchange_actions)
     swapWithNoImprovement, exchangeWithNoImprovement = 0, 0
+    np.random.shuffle(exchange_actions)
+    np.random.shuffle(actions)
+
     while True:
         if swapLen <= swapWithNoImprovement and exchangeLen <= exchangeWithNoImprovement:
             break
         elif np.random.random() < 0.5 and swapLen > swapWithNoImprovement:
-            delta = utils.calculate_swap_delta(actions[0], path, distances, type)
+            action = actions[np.random.randint(len(actions)), :]
+            delta = utils.calculate_swap_delta(action, path, distances, type)
             if delta > 0:
-                utils.swap(path, actions[0], type)
+                utils.swap(path, action, type)
                 swapWithNoImprovement = 0
             else:
                 swapWithNoImprovement += 1
-            np.random.shuffle(actions)
         else:
-            delta = utils.calculate_exchange_delta(exchange_actions[0], path, not_path, distances)
+            exchange_action = actions[np.random.randint(len(actions)), :]
+            delta = utils.calculate_exchange_delta(exchange_action, path, not_path, distances)
             if delta > 0:
-                utils.exchange_vertices(path, not_path, exchange_actions[0])
+                utils.exchange_vertices(path, not_path, exchange_action)
                 exchangeWithNoImprovement = 0
             else:
                 exchangeWithNoImprovement += 1
-            np.random.shuffle(exchange_actions)
     return np.append(path, path[0])
 
 
