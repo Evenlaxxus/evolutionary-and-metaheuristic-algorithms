@@ -105,10 +105,14 @@ def getCandidates(distanceMatrix, k):
     return candidatesDict
 
 
-def steepest(distanceMatrix, type):
+def steepest(distanceMatrix, starting=None):
     number_of_all = distanceMatrix.shape[0]
     number_of_half = int(np.ceil(number_of_all / 2))
-    path, not_path = utils.make_random_path(number_of_half, number_of_all)
+    if starting is None:
+        path, not_path = utils.make_random_path(number_of_half, number_of_all)
+    else:
+        path = starting
+        not_path = np.array([p for p in range(len(distanceMatrix)) if p not in path])
     candidatesDict = getCandidates(distanceMatrix, 5)
 
     while True:

@@ -40,7 +40,7 @@ def multipleStartLocalSearch(data, n):
     distances = np.array(utils.makeDistanceMatrix(data))
 
     for _ in range(n):
-        paths.append(steepest.steepest(distances, ""))
+        paths.append(steepest.steepest(distances))
 
     distances = []
     for path in paths:
