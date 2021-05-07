@@ -131,7 +131,7 @@ def steepest(distanceMatrix, type):
 
 
 def main():
-    kroA100Data = utils.readTspFile("../data/kroA100.tsp")
+    kroA100Data = utils.readTspFile("../data/kroB200.tsp")
     utils.localSearchTester(steepest, kroA100Data, "edges")
     # utils.localSearchTester(steepest, kroA100Data, "vertices")
 
