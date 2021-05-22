@@ -13,7 +13,7 @@ def evolutionaryTravelingSalesman(distanceMatrix, timeout):
     timeout_start = time.time()
     while time.time() < timeout_start + timeout:
         # two random parents
-        parents = [[],[]]
+        parents = [[], []]
         parents[0] = population[random.randint(0, len(population) - 1)]
         parents[1] = population[random.randint(0, len(population) - 1)]
 
@@ -33,10 +33,17 @@ def evolutionaryTravelingSalesman(distanceMatrix, timeout):
                 worstDistance = distance
                 worstPath = path
 
-        # TODO replace descendant not in population with something better
-        if worstDistance > descendantDistance and descendant not in population:
+        if worstDistance > descendantDistance and not isPathInPopulation(population, descendant):
             population.remove(worstPath)
             population.append(descendant)
+
+
+def isPathInPopulation(population, path):
+    for _ in range(len(path)):
+        if any(np.array_equal(path, p) for p in population):
+            return True
+        path = path[1:] + [path[0]]
+    return False
 
 
 def recombination(parents):
@@ -56,10 +63,10 @@ def recombination(parents):
     return combined
 
 
-
 def createRoute(city_list):
-    route = random.sample(city_list, math.ceil(len(city_list)/2))
+    route = random.sample(city_list, math.ceil(len(city_list) / 2))
     return route
+
 
 def make_populations(size, city_list):
     count = 0
@@ -76,6 +83,7 @@ def main():
     data = utils.readTspFile("../data/kroA200.tsp")
     distanceMatrix = utils.makeDistanceMatrix(data)
     evolutionaryTravelingSalesman(distanceMatrix, 15)
+
 
 if __name__ == '__main__':
     main()
