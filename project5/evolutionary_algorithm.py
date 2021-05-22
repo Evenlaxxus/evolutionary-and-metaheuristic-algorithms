@@ -8,14 +8,12 @@ from project3.candidate_local_search import steepest
 
 def evolutionaryTravelingSalesman(distanceMatrix, timeout):
     city_list = [x for x in range(0, 200)]
-    population = make_populations(20, city_list)
-    print(population)
+    population = make_populations(20, city_list, distanceMatrix)
+
     timeout_start = time.time()
     while time.time() < timeout_start + timeout:
         # two random parents
-        parents = [[], []]
-        parents[0] = population[random.randint(0, len(population) - 1)]
-        parents[1] = population[random.randint(0, len(population) - 1)]
+        parents = random.sample(population, k=2)
 
         # construct descendant
         descendant = recombination(parents)
@@ -23,19 +21,22 @@ def evolutionaryTravelingSalesman(distanceMatrix, timeout):
         # local search
         descendant = steepest(np.array(distanceMatrix), descendant)
         descendantDistance = utils.calculatePathDistance(descendant, distanceMatrix)
+        descendantDict = {
+            "path": descendant,
+            "length": descendantDistance
+        }
 
         # steady state
-        worstPath = population[0]
-        worstDistance = utils.calculatePathDistance(population[0], distanceMatrix)
-        for path in population:
-            distance = utils.calculatePathDistance(path, distanceMatrix)
-            if distance > worstDistance:
-                worstDistance = distance
-                worstPath = path
+        worst = population[0]
+        for p in population:
+            if p["length"] > worst["length"]:
+                worst = p
 
-        if worstDistance > descendantDistance and not isPathInPopulation(population, descendant):
-            population.remove(worstPath)
-            population.append(descendant)
+        if worst["length"] > descendantDict["length"] and not isPathInPopulation(population, descendantDict["path"]):
+            population.remove(worst)
+            descendantDict["index"] = worst["index"]
+            population.append(descendantDict)
+    print(population)
 
 
 def isPathInPopulation(population, path):
@@ -51,15 +52,15 @@ def recombination(parents):
     parent_2 = parents[1]
     common = list(set(parent_1).intersection(parent_2))
     combined = []
-    for i in range(len(parent_1)):
-        if parent_1[i] in common:
-            combined.append(parent_1[i])
+    for i in range(len(parent_1["path"])):
+        if parent_1["path"][i] in common:
+            combined.append(parent_1["path"][i])
         else:
             choice = random.randint(0, 1)
-            if choice == 0 and parent_2[i] not in common:
-                combined.append(parent_2[i])
+            if choice == 0 and parent_2["path"][i] not in common:
+                combined.append(parent_2["path"][i])
             else:
-                combined.append(parent_1[i])
+                combined.append(parent_1["path"][i])
     return combined
 
 
@@ -68,13 +69,17 @@ def createRoute(city_list):
     return route
 
 
-def make_populations(size, city_list):
+def make_populations(size, city_list, distanceMatrix):
     count = 0
     population = []
     while count < size:
         new = createRoute(city_list)
         if new not in population:
-            population.append(new)
+            population.append({
+                "index": count,
+                "path": new,
+                "length": utils.calculatePathDistance(new, distanceMatrix)
+            })
             count += 1
     return population
 
