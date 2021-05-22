@@ -7,9 +7,10 @@ from project3.candidate_local_search import steepest
 
 
 def evolutionaryTravelingSalesman(distanceMatrix, timeout):
-    city_list = [x for x in range(0, 200)]
-    population = make_populations(20, city_list, distanceMatrix)
-
+    # city_list = [x for x in range(0, 200)]
+    # population = make_populations(20, city_list)
+    population = make_ls_populations(20, distanceMatrix)
+    print(population)
     timeout_start = time.time()
     while time.time() < timeout_start + timeout:
         # two random parents
@@ -78,6 +79,20 @@ def make_populations(size, city_list, distanceMatrix):
             population.append({
                 "index": count,
                 "path": new,
+                "length": utils.calculatePathDistance(new, distanceMatrix)
+            })
+            count += 1
+    return population
+
+def make_ls_populations(size, distanceMatrix):
+    count = 0
+    population = []
+    while count < size:
+        new = steepest(np.array(distanceMatrix))
+        if not isPathInPopulation(population, new):
+            population.append({
+                "index": count,
+                "path": list(new),
                 "length": utils.calculatePathDistance(new, distanceMatrix)
             })
             count += 1
