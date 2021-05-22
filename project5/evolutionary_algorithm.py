@@ -10,14 +10,15 @@ def evolutionaryTravelingSalesman(distanceMatrix, timeout):
     # city_list = [x for x in range(0, 200)]
     # population = make_populations(20, city_list)
     population = make_ls_populations(20, distanceMatrix)
-    print(population)
+    # print(population)
     timeout_start = time.time()
     while time.time() < timeout_start + timeout:
+        print(timeout_start + timeout - time.time())
         # two random parents
         parents = random.sample(population, k=2)
 
         # construct descendant
-        descendant = recombination(parents)
+        descendant = recombination(parents, distanceMatrix)
 
         # local search
         descendant = list(steepest(np.array(distanceMatrix), descendant))
@@ -57,20 +58,23 @@ def isPathInPopulation(population, path):
     return False
 
 
-def recombination(parents):
-    parent_1 = parents[0]
-    parent_2 = parents[1]
+def recombination(parents, distanceMatrix):
+    parent_1 = parents[0]["path"]
+    parent_2 = parents[1]["path"]
     common = list(set(parent_1).intersection(parent_2))
     combined = []
-    for i in range(len(parent_1["path"]) - 1):
-        if parent_1["path"][i] in common:
-            combined.append(parent_1["path"][i])
+
+    betterParent = utils.calculatePathDistance(parent_1, distanceMatrix) < utils.calculatePathDistance(parent_1,
+                                                                                                       distanceMatrix)
+
+    for i in range(len(parent_1) - 1):
+        if parent_1[i] in common:
+            combined.append(parent_1[i])
         else:
-            choice = random.randint(0, 1)
-            if choice == 0 and parent_2["path"][i] not in common:
-                combined.append(parent_2["path"][i])
+            if betterParent:
+                combined.append(parent_1[i])
             else:
-                combined.append(parent_1["path"][i])
+                combined.append(parent_2[i])
     return combined
 
 
@@ -93,6 +97,7 @@ def make_populations(size, city_list, distanceMatrix):
             count += 1
     return population
 
+
 def make_ls_populations(size, distanceMatrix):
     count = 0
     population = []
@@ -109,7 +114,7 @@ def make_ls_populations(size, distanceMatrix):
 
 
 def test_evolutionary(testerRuns, algorithmStopTime):
-    data = utils.readTspFile("../data/kroB200.tsp")
+    data = utils.readTspFile("../data/kroA200.tsp")
     distanceMatrix = utils.makeDistanceMatrix(data)
     paths = []
 
@@ -133,6 +138,7 @@ def main():
     # distanceMatrix = utils.makeDistanceMatrix(data)
     # evolutionaryTravelingSalesman(distanceMatrix, 15)
     test_evolutionary(10, 111)
+
 
 if __name__ == '__main__':
     main()
