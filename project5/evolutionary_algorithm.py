@@ -20,7 +20,7 @@ def evolutionaryTravelingSalesman(distanceMatrix, timeout):
         descendant = recombination(parents)
 
         # local search
-        descendant = steepest(np.array(distanceMatrix), descendant)
+        descendant = list(steepest(np.array(distanceMatrix), descendant))
         descendantDistance = utils.calculatePathDistance(descendant, distanceMatrix)
         descendantDict = {
             "path": descendant,
