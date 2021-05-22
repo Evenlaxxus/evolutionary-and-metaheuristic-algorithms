@@ -37,7 +37,16 @@ def evolutionaryTravelingSalesman(distanceMatrix, timeout):
             population.remove(worst)
             descendantDict["index"] = worst["index"]
             population.append(descendantDict)
-    print(population)
+    best_dist = population[0]["length"]
+    best_path = population[0]["path"]
+    print(best_dist, best_path)
+    for element in population:
+        if element["length"] < best_dist:
+            best_dist = element["length"]
+            best_path = element["path"]
+    print(best_dist, best_path)
+
+    return best_dist, best_path
 
 
 def isPathInPopulation(population, path):
@@ -53,7 +62,7 @@ def recombination(parents):
     parent_2 = parents[1]
     common = list(set(parent_1).intersection(parent_2))
     combined = []
-    for i in range(len(parent_1["path"])):
+    for i in range(len(parent_1["path"]) - 1):
         if parent_1["path"][i] in common:
             combined.append(parent_1["path"][i])
         else:
@@ -99,11 +108,31 @@ def make_ls_populations(size, distanceMatrix):
     return population
 
 
-def main():
-    data = utils.readTspFile("../data/kroA200.tsp")
+def test_evolutionary(testerRuns, algorithmStopTime):
+    data = utils.readTspFile("../data/kroB200.tsp")
     distanceMatrix = utils.makeDistanceMatrix(data)
-    evolutionaryTravelingSalesman(distanceMatrix, 15)
+    paths = []
 
+    for _ in range(testerRuns):
+        paths.append(evolutionaryTravelingSalesman(distanceMatrix, algorithmStopTime))
+
+    minRun = min(paths, key=lambda t: t[0])
+    maxRun = max(paths, key=lambda t: t[0])
+
+    distances = [p[0] for p in paths]
+    averageDistance = sum(distances) / len(distances)
+
+    print("minimalny dystans: " + str(minRun[0]), "średni dystans: " + str(averageDistance),
+          "maksymalny dystans: " + str(maxRun[0]))
+
+    utils.drawGraph(data, minRun[1])
+
+
+def main():
+    # data = utils.readTspFile("../data/kroA200.tsp")
+    # distanceMatrix = utils.makeDistanceMatrix(data)
+    # evolutionaryTravelingSalesman(distanceMatrix, 15)
+    test_evolutionary(10, 111)
 
 if __name__ == '__main__':
     main()
